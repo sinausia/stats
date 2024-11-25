@@ -3,14 +3,13 @@ import matplotlib.pyplot as plt
 import numpy as np
 import os
 
-plt.rcParams['svg.fonttype'] = 'none'  # Do not convert text to paths, retain as font
-plt.rcParams['font.family'] = 'Arial'  # Set a standard font family
+plt.rcParams['svg.fonttype'] = 'none'
+plt.rcParams['font.family'] = 'Arial'
 
-# Load the CSV file
 csv_file_path = '/Users/danielsinausia/Documents/Paper rebuttal/Correlations/current/current.csv'
 df = pd.read_csv(csv_file_path)
 
-wavenumbers = df.columns[:]  # Assuming first column is labels, so skip it
+wavenumbers = df.columns[:]
 wavenumbers = wavenumbers.str.replace("Mean", "").astype(float)
 
 x1 = df.iloc[0].values[:]
@@ -22,15 +21,14 @@ y3 = df.iloc[5].values[:]
 x4 = df.iloc[6].values[:]
 y4 = df.iloc[7].values[:]
 
-# Create a color map for the actual wavenumbers
+
 norm = plt.Normalize(vmin=wavenumbers.min(), vmax=wavenumbers.max())
 colors = plt.cm.cividis(norm(wavenumbers))
 
-fig, axs = plt.subplots(2, 2, figsize=(18, 12))  # 2 rows, 2 columns for each dataset
+fig, axs = plt.subplots(2, 2, figsize=(18, 12))
 
 def plot_dataset(ax, x, y, dataset_label, marker_style):
     sc = ax.scatter(x, y, c=colors, label=dataset_label, marker=marker_style)
-    # Add wavenumber labels next to each point
     for i in range(len(x)):
         ax.text(x[i], y[i], f'{wavenumbers[i]:.0f}', fontsize=9, ha='right', va='bottom')
     ax.set_xlabel('Spearman Correlation Coefficient')
@@ -43,21 +41,19 @@ plot_dataset(axs[0, 1], x2, y2, '0.1 M', 'x')
 plot_dataset(axs[1, 0], x3, y3, '0.2 M', '^')
 plot_dataset(axs[1, 1], x4, y4, '1 M', 's')
 
-cax = fig.add_axes([0.92, 0.3, 0.02, 0.4])  # [left, bottom, width, height]
+cax = fig.add_axes([0.92, 0.3, 0.02, 0.4])
 sm = plt.cm.ScalarMappable(cmap='cividis', norm=norm)
 sm.set_array([])
 cbar = fig.colorbar(sm, cax=cax, orientation='vertical')
 cbar.set_label('Wavenumber')
 
-plt.tight_layout(rect=[0, 0, 0.9, 1])  # Make room for the colorbar
+plt.tight_layout(rect=[0, 0, 0.9, 1])
 
 output_dir = os.path.dirname(csv_file_path)
 svg_file_path = os.path.join(output_dir, 'scatter_plots_with_wavenumbers.svg')
 png_file_path = os.path.join(output_dir, 'scatter_plots_with_wavenumbers.png')
-
-plt.savefig(svg_file_path, format='svg', bbox_inches='tight')  # Save as SVG with font retention
-plt.savefig(png_file_path, format='png', dpi=300, bbox_inches='tight')  # Save as PNG
-
+plt.savefig(svg_file_path, format='svg', bbox_inches='tight')
+plt.savefig(png_file_path, format='png', dpi=300, bbox_inches='tight')
 plt.show()
 
 #%%heatmaps
@@ -75,7 +71,7 @@ plt.savefig(os.path.join(output_dir, 'spearman_heatmap.svg'), format='svg', bbox
 plt.savefig(os.path.join(output_dir, 'spearman_heatmap.png'), format='png', dpi=300, bbox_inches='tight')
 plt.show()
 
-# Create heatmap for DTW alignment factors
+
 plt.figure(figsize=(12, 6))
 plt.imshow(dtw_data, aspect='auto', cmap='pink', extent=[wavenumbers.min(), wavenumbers.max(), 0, 4])
 plt.colorbar(label='DTW Alignment Factor')
