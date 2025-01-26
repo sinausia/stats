@@ -20,7 +20,7 @@ df = df.T  # Transposing to have the variables as the first column
 df.columns = df.iloc[0]  # Making the wavelengths the header
 df = df[1:911]  # Using only the first 910 spectra
 
-mean_values = df.mean(axis=1)
+mean_values = df.mean(axis=0)
 
 centered_data = df - mean_values
 color_map  = {
